@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 
 public class Utils {
     public static void diskClean() {
@@ -13,8 +14,5 @@ public class Utils {
         }
     }
 
-    public static byte[] getFullFileByHeadChunkId() {
 
-        return null;
-    }
 }

@@ -58,9 +58,6 @@ public class FileSaver {
         ArrayList<DataChunk> resList = new ArrayList<>();
         byte[] tempByteArray = new byte[Constants.CHUNK_SIZE];
 
-        //save the first chunk of a file.
-        metaManager.metaJsonObject.addProperty(chunkId, headChunkName);
-
         for (int i = 0; i < dataBytes.length; i++) {
             // 1. tmp end, data not
             if (i < Constants.CHUNK_SIZE) {
@@ -94,14 +91,22 @@ public class FileSaver {
         for (int i = 0; i < chunkArrayList.size(); i++) {
             DataChunk dataChunk = chunkArrayList.get(i);
             String diskAddr;
-            // head chunk only allows to appear in the first six disks. Thus, we can use disk number to represent
-            // data strip number.
-            if (dataChunk.isHead()) {
-                diskAddr = diskAddrs[loadBalencePointer % (diskAddrs.length - 2)].getAbsolutePath();
-            } else{
-                diskAddr = diskAddrs[loadBalencePointer % diskAddrs.length].getAbsolutePath();
+            int diskNum;
+            // in order to make "data strip" more clear, head chunk only allows to appear in the first six disks.
+            // So there are only 6 strips in total.
+            // accomplish the details for data chunk
+            if (i == 0) {
+                diskNum = loadBalencePointer % (diskAddrs.length - 2);
+                diskAddr = diskAddrs[diskNum].getAbsolutePath();
+                dataChunk.setHead(true);
+            } else {
+                diskNum = loadBalencePointer % diskAddrs.length;
+                diskAddr = diskAddrs[diskNum].getAbsolutePath();
             }
             loadBalencePointer++;
+            dataChunk.setDiskAddr(diskAddr);
+
+            // write chunk to disks
             String newChunkAddr = Paths.get(diskAddr, dataChunk.getChunkId()).toString();
             try {
                 File chunkFile = new File(newChunkAddr);
@@ -113,16 +118,15 @@ public class FileSaver {
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chunkFile));
                 oos.writeObject(dataChunk);
                 oos.close();
-                //反序列化
-//                File file = new File("template");
-//                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-//                User1 newUser = (User1)ois.readObject();
-//                System.out.println(newUser.toString());
+
             } catch (Exception e) {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
                 return false;
             }
+
+            // write meta data into meta.info
+            metaManager.metaJsonObject.add(dataChunk.getChunkId(), dataChunk.toJsonObject());
         }
         return true;
     }

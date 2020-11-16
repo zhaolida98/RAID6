@@ -1,5 +1,7 @@
 package models;
 
+import com.google.gson.JsonObject;
+
 import java.io.Serializable;
 
 public class DataChunk implements Serializable {
@@ -8,6 +10,7 @@ public class DataChunk implements Serializable {
     private String nextChunkId;
     private String type;
     private boolean isHead = false;
+    private String diskAddr;
 
 
     public DataChunk(String chunkId, byte[] content) {
@@ -58,5 +61,25 @@ public class DataChunk implements Serializable {
 
     public void setHead(boolean head) {
         isHead = head;
+    }
+
+    public String getDiskAddr() {
+        return diskAddr;
+    }
+
+    public void setDiskAddr(String diskAddr) {
+        this.diskAddr = diskAddr;
+    }
+
+    public JsonObject toJsonObject() {
+        if (this.chunkId.isEmpty() || this.diskAddr.isEmpty()) {
+            return null;
+        }
+        JsonObject dataChunkJson = new JsonObject();
+        dataChunkJson.addProperty("chunkId", this.chunkId);
+        dataChunkJson.addProperty("nextChunkId", this.nextChunkId);
+        dataChunkJson.addProperty("diskAddr", this.diskAddr);
+        dataChunkJson.addProperty("isHead", this.isHead);
+        return dataChunkJson;
     }
 }
