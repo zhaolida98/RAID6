@@ -42,7 +42,7 @@ public class FileSaver {
         return ok;
     }
 
-    private byte[] readFileIntoBytes() {
+    public byte[] readFileIntoBytes() {
         byte[] resBytes;
         try {
             resBytes = FileUtils.readFileToByteArray(targetFile);
@@ -60,9 +60,7 @@ public class FileSaver {
 
         for (int i = 0; i < dataBytes.length; i++) {
             // 1. tmp end, data not
-            if (i < Constants.CHUNK_SIZE) {
-                tempByteArray[i % Constants.CHUNK_SIZE] = dataBytes[i];
-            }
+            tempByteArray[i % Constants.CHUNK_SIZE] = dataBytes[i];
             if (((i + 1) % Constants.CHUNK_SIZE) == 0 && (i + 1) < dataBytes.length) {
 
                 DataChunk dataChunk = new DataChunk(chunkId, tempByteArray);

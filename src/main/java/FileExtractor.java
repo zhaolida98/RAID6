@@ -1,3 +1,4 @@
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import models.DataChunk;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +15,13 @@ public class FileExtractor {
     private final Logger logger = LogManager.getLogger(this.getClass());
     private MetaManager metaManager = new MetaManager();
 
-    public byte[] getFullFiByHeadChunkId(String chunkId) {
+    public byte[] getFullContentByHeadChunkId(String chunkId) {
         ArrayList<Byte> fullFileByte = new ArrayList<>();
         byte[] res;
+        if (metaManager.metaJsonObject.get(chunkId)==null) {
+            logger.error("no such chunkId recorded, please check: " + chunkId);
+            return null;
+        }
         JsonObject dataChunkMetaInfo = metaManager.metaJsonObject.get(chunkId).getAsJsonObject();
         String nextChunkId;
         byte[] currentChunkContent;
@@ -31,7 +36,6 @@ public class FileExtractor {
         }
         while (true) {
             chunkId = dataChunkMetaInfo.get("chunkId").getAsString();
-            nextChunkId = dataChunkMetaInfo.get("nextChunkId").getAsString();
             diskAddr = dataChunkMetaInfo.get("diskAddr").getAsString();
             chunkFileAddr = StringUtils.join(Arrays.asList(diskAddr, chunkId), File.separator);
             currentChunkContent = readChunkFileAndGetContent(chunkFileAddr);
@@ -44,9 +48,10 @@ public class FileExtractor {
             for (int i = 0; i < currentChunkContent.length; i++) {
                 fullFileByte.add(currentChunkContent[i]);
             }
-            if (nextChunkId == null) {
+            if (dataChunkMetaInfo.get("nextChunkId").isJsonNull()) {
                 break;
             }
+            nextChunkId = dataChunkMetaInfo.get("nextChunkId").getAsString();
             dataChunkMetaInfo = metaManager.metaJsonObject.get(nextChunkId).getAsJsonObject();
         }
 
