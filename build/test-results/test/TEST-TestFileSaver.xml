@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestFileSaver" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-11-15T13:46:05" hostname="nryet-ThinkPad-E595" time="0.574">
+  <properties/>
+  <testcase name="cleanDisks" classname="TestFileSaver" time="0.574"/>
+  <system-out><![CDATA[[DEBUG] 2020-11-15 21:46:06.145 Test worker MetaManager:21 - src/main/resources/META/meta.json
+[INFO ] 2020-11-15 21:46:06.192 Test worker FileSaver:143 - 8 disks found.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
