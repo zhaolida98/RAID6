@@ -1,0 +1,2 @@
+# RAID6
+NTU 20S1-CE7490 project2
