@@ -36,7 +36,7 @@ public class ParityGenerator {
             logger.error("get chopChunks of P failed");
             return false;
         }
-        boolean ok = fileSaver.storeChunks(PChunkList, diskList);
+        boolean ok = fileSaver.storeChunks(PChunkList, diskList, 1);
         if (!ok) {
             logger.error("Store P chunk fail");
             return false;
@@ -53,7 +53,7 @@ public class ParityGenerator {
             logger.error("get chopChunks of Q failed");
             return false;
         }
-        ok = fileSaver.storeChunks(QChunkList, diskList);
+        ok = fileSaver.storeChunks(QChunkList, diskList, 2);
         if (!ok) {
             logger.error("Store Q chunk fail");
             return false;

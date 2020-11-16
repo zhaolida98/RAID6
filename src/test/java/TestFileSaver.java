@@ -53,7 +53,7 @@ public class TestFileSaver {
             assert false;
         }
         FileSaver fileSaver = new FileSaver(testFile);
-        fileSaver.saveFile();
+        fileSaver.saveFile(0);
     }
 
     @Test

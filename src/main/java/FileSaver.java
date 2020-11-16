@@ -25,7 +25,7 @@ public class FileSaver {
         this.targetFile = targetFile;
     }
 
-    public boolean saveFile() {
+    public boolean saveFile(int parityId) {
         if (!this.targetFile.isFile()) {
             logger.error("no targetFile found");
             return false;
@@ -37,7 +37,7 @@ public class FileSaver {
         File[] diskAddrs = getDisks();
         if (dataChunkArrayList == null || diskAddrs == null) return false;
 
-        boolean ok = storeChunks(dataChunkArrayList, diskAddrs);
+        boolean ok = storeChunks(dataChunkArrayList, diskAddrs, parityId);
         metaManager.finalize();
         return ok;
     }
@@ -81,7 +81,7 @@ public class FileSaver {
         return resList;
     }
 
-    public boolean storeChunks(ArrayList<DataChunk> chunkArrayList, File[] diskAddrs) {
+    public boolean storeChunks(ArrayList<DataChunk> chunkArrayList, File[] diskAddrs, int parityId) {
         for (File file :
                 diskAddrs) {
             logger.debug(file.getName());
@@ -94,7 +94,16 @@ public class FileSaver {
             // So there are only 6 strips in total.
             // accomplish the details for data chunk
             if (i == 0) {
-                diskNum = loadBalencePointer % (diskAddrs.length - 2);
+                // parityId 0: data strip
+                // parityId 1: P parity
+                // parityId 2: Q parity
+                if (parityId == 0) {
+                    diskNum = loadBalencePointer % (diskAddrs.length - 2);
+                } else if (parityId == 1) {
+                    diskNum = diskAddrs.length - 2;
+                } else {
+                    diskNum = diskAddrs.length - 1;
+                }
                 diskAddr = diskAddrs[diskNum].getAbsolutePath();
                 dataChunk.setHead(true);
             } else {

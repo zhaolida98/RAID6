@@ -17,7 +17,7 @@ public class App {
                 continue;
             }
             fileSaver.setTargetFile(tmpFile);
-            fileSaver.saveFile();
+            fileSaver.saveFile(0);
         }
 
         // save parities
