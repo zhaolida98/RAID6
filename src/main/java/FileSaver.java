@@ -90,26 +90,21 @@ public class FileSaver {
             DataChunk dataChunk = chunkArrayList.get(i);
             String diskAddr;
             int diskNum;
-            // in order to make "data strip" more clear, head chunk only allows to appear in the first six disks.
-            // So there are only 6 strips in total.
-            // accomplish the details for data chunk
+
+            // parityId 0: data strip, put into the first 6 disks
+            // parityId 1: P parity, put only put at the 7th disk
+            // parityId 2: Q parity, onlyt at the 8th disk
             if (i == 0) {
-                // parityId 0: data strip
-                // parityId 1: P parity
-                // parityId 2: Q parity
-                if (parityId == 0) {
-                    diskNum = loadBalencePointer % (diskAddrs.length - 2);
-                } else if (parityId == 1) {
-                    diskNum = diskAddrs.length - 2;
-                } else {
-                    diskNum = diskAddrs.length - 1;
-                }
-                diskAddr = diskAddrs[diskNum].getAbsolutePath();
                 dataChunk.setHead(true);
-            } else {
-                diskNum = loadBalencePointer % diskAddrs.length;
-                diskAddr = diskAddrs[diskNum].getAbsolutePath();
             }
+            if (parityId == 0) {
+                diskNum = loadBalencePointer % (diskAddrs.length - 2);
+            } else if (parityId == 1) {
+                diskNum = diskAddrs.length - 2;
+            } else {
+                diskNum = diskAddrs.length - 1;
+            }
+            diskAddr = diskAddrs[diskNum].getAbsolutePath();
             loadBalencePointer++;
             dataChunk.setDiskAddr(diskAddr);
 
