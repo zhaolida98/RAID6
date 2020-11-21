@@ -1,4 +1,3 @@
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import models.DataChunk;
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +81,31 @@ public class FileExtractor {
             return null;
         }
         return dataChunk.getContent();
+    }
+
+    public DataChunk readChunkFileToDataChunk(String chunkId) {
+        MetaManager metaManager = new MetaManager();
+        JsonObject oldDatachunk = metaManager.metaJsonObject.get(chunkId).getAsJsonObject();
+        String diskAddr = oldDatachunk.get("diskAddr").getAsString();
+        String chunkFileAddr = StringUtils.join(Arrays.asList(diskAddr, chunkId), File.separator);
+
+        File chunkFile = new File(chunkFileAddr);
+        DataChunk dataChunk;
+        if (!chunkFile.isFile()) {
+            logger.error("cannot find " + chunkFileAddr);
+            return null;
+        }
+
+        //反序列化
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chunkFile));
+            dataChunk = (DataChunk) ois.readObject();
+        } catch (Exception e) {
+            logger.error("un-serializing failed.");
+            e.printStackTrace();
+            return null;
+        }
+        return dataChunk;
     }
 
     public ArrayList<String> getAllHeadChunkIdsInDisk(String diskAddr) {
