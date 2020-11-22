@@ -3,6 +3,7 @@ package models;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 
 public class DataChunk implements Serializable {
     private String chunkId;
@@ -16,6 +17,17 @@ public class DataChunk implements Serializable {
     public DataChunk(String chunkId, byte[] content) {
         this.chunkId = chunkId;
         this.content = content;
+    }
+
+    public DataChunk(String chunkId, long[] content) {
+        this.chunkId = chunkId;
+        byte[] content2byte = new byte[content.length * Long.BYTES];
+        for (int i = 0; i < content.length; i++) {
+            ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            buffer.putLong(content[i]);
+            System.arraycopy(buffer.array(), 0, content2byte, i * 8, Long.BYTES);
+        }
+        this.content = content2byte;
     }
 
     public DataChunk(String chunkId, byte[] content, String nextChunkId) {
@@ -37,6 +49,16 @@ public class DataChunk implements Serializable {
 
     public void setContent(byte[] content) {
         this.content = content;
+    }
+
+    public void setContent(long[] content) {
+        byte[] content2byte = new byte[content.length * Long.BYTES];
+        for (int i = 0; i < content.length; i++) {
+            ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            buffer.putLong(content[i]);
+            System.arraycopy(buffer.array(), 0, content2byte, i * 8, Long.BYTES);
+        }
+        this.content = content2byte;
     }
 
     public String getNextChunkId() {

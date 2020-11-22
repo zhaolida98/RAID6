@@ -8,7 +8,7 @@ public class TestFileExtractor {
     @Test
     public void test_getAllHeadChunkIdsInDisk() {
         FileExtractor fileExtractor = new FileExtractor();
-        ArrayList<String> heads = fileExtractor.getAllHeadChunkIdsInDisk("src/main/resources/DiskGroups/Disk6");
+        ArrayList<String> heads = fileExtractor.getAllHeadChunkIdsInDisk("src/main/resources/DiskGroups/Disk2");
         Assert.assertEquals(heads.size(), 1);
 
         heads = fileExtractor.getAllHeadChunkIdsInDisk("src/main/resources/DiskGroups/Disk5");
@@ -18,7 +18,7 @@ public class TestFileExtractor {
     @Test
     public void test_getFullContentByHeadChunkId() {
         FileExtractor fileExtractor = new FileExtractor();
-        byte[] fullFile = fileExtractor.getFullContentByHeadChunkId("1333864c-e835-4656-a227-ae9bd96b36c2");
+        byte[] fullFile = fileExtractor.getFullContentByHeadChunkId("51740f1b-f11b-4848-b10d-30e2afd39448");
         Assert.assertNotNull(fullFile);
 
         File testFile = new File("src/test/resources/build.txt");
@@ -26,13 +26,11 @@ public class TestFileExtractor {
         byte[] origin = fileSaver.readFileIntoBytes();
         for (int i = 0; i < origin.length; i++) {
             assert origin[i] == fullFile[i];
-//            System.out.print(origin[i] + ":" + fullFile[i] + "\t");
-            if ((i + 1) % 10 == 0) {
-                System.out.println();
-            }
         }
+        System.out.println("Benchmark 1 passed.");
         for (int i = origin.length; i < fullFile.length; i++) {
             assert fullFile[i] == 0;
         }
+        System.out.println("Benchmark 2 passed.");
     }
 }

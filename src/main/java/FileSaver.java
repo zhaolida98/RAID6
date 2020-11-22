@@ -17,9 +17,7 @@ public class FileSaver {
 
     private File targetFile;
     private MetaManager metaManager = new MetaManager();
-    public FileSaver() {
-
-    }
+    public FileSaver() {}
 
     public FileSaver(File targetFile) {
         this.targetFile = targetFile;
@@ -93,23 +91,20 @@ public class FileSaver {
             // in order to make "data strip" more clear, head chunk only allows to appear in the first six disks.
             // So there are only 6 strips in total.
             // accomplish the details for data chunk
-            if (i == 0) {
-                // parityId 0: data strip
-                // parityId 1: P parity
-                // parityId 2: Q parity
-                if (parityId == 0) {
-                    diskNum = loadBalencePointer % (diskAddrs.length - 2);
-                } else if (parityId == 1) {
-                    diskNum = diskAddrs.length - 2;
-                } else {
-                    diskNum = diskAddrs.length - 1;
-                }
-                diskAddr = diskAddrs[diskNum].getAbsolutePath();
-                dataChunk.setHead(true);
+
+            // parityId 0: data strip
+            // parityId 1: P parity
+            // parityId 2: Q parity
+            if (parityId == 0) {
+                diskNum = loadBalencePointer % (diskAddrs.length - 2);
+            } else if (parityId == 1) {
+                diskNum = diskAddrs.length - 2;
             } else {
-                diskNum = loadBalencePointer % diskAddrs.length;
-                diskAddr = diskAddrs[diskNum].getAbsolutePath();
+                diskNum = diskAddrs.length - 1;
             }
+            diskAddr = diskAddrs[diskNum].getAbsolutePath();
+            dataChunk.setHead(true);
+
             loadBalencePointer++;
             dataChunk.setDiskAddr(diskAddr);
 
@@ -137,8 +132,6 @@ public class FileSaver {
         }
         return true;
     }
-
-
 
     public File[] getDisks() {
         File diskGroups = new File(Constants.DISK_GROUP_ADDR);

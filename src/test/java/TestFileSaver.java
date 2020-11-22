@@ -47,7 +47,7 @@ public class TestFileSaver {
 
     @Test
     public void test_fileSaver() {
-        File testFile = new File("src/test/resources/linuxqq_2.0.0-b2-1084_amd64.deb");
+        File testFile = new File("src/test/resources/build.txt");
         if (!testFile.isFile()) {
             System.out.println("not a file");
             assert false;

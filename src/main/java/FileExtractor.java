@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -82,6 +83,57 @@ public class FileExtractor {
             return null;
         }
         return dataChunk.getContent();
+    }
+
+    public DataChunk readChunkFile(String chunkFileAddr) {
+        File chunkFile = new File(chunkFileAddr);
+        DataChunk dataChunk;
+        if (!chunkFile.isFile()) {
+            logger.error("cannot find " + chunkFileAddr);
+            return null;
+        }
+
+        //反序列化
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chunkFile));
+            dataChunk = (DataChunk) ois.readObject();
+        } catch (Exception e) {
+            logger.error("un-serializing failed.");
+            e.printStackTrace();
+            return null;
+        }
+        return dataChunk;
+    }
+
+    public long[] readChunkFileAndGetContentByLong(String chunkFileAddr) {
+        File chunkFile = new File(chunkFileAddr);
+        DataChunk dataChunk;
+        if (!chunkFile.isFile()) {
+            logger.error("cannot find " + chunkFileAddr);
+            return null;
+        }
+
+        //反序列化
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chunkFile));
+            dataChunk = (DataChunk) ois.readObject();
+        } catch (Exception e) {
+            logger.error("un-serializing failed.");
+            e.printStackTrace();
+            return null;
+        }
+
+        byte[] src = dataChunk.getContent();
+        long[] contentByLong = new long[Constants.CHUNK_SIZE / Long.BYTES];
+
+        for (int i = 0; i < contentByLong.length; i++) {
+            ByteBuffer buffer = ByteBuffer.allocate(8);
+            buffer.put(src, i * 8, 8);
+            buffer.flip();
+            contentByLong[i] = buffer.getLong();
+        }
+
+        return contentByLong;
     }
 
     public ArrayList<String> getAllHeadChunkIdsInDisk(String diskAddr) {

@@ -22,8 +22,7 @@ public class App {
 
         // save parities
         ParityGenerator parityGenerator = new ParityGenerator();
-        parityGenerator.generateP();
-        parityGenerator.generateQ();
+        parityGenerator.generate();
         parityGenerator.storeParities();
     }
 }
