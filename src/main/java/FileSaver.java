@@ -17,7 +17,9 @@ public class FileSaver {
 
     private File targetFile;
     private MetaManager metaManager = new MetaManager();
-    public FileSaver() {}
+    public FileSaver() {
+
+    }
 
     public FileSaver(File targetFile) {
         this.targetFile = targetFile;
@@ -88,13 +90,13 @@ public class FileSaver {
             DataChunk dataChunk = chunkArrayList.get(i);
             String diskAddr;
             int diskNum;
-            // in order to make "data strip" more clear, head chunk only allows to appear in the first six disks.
-            // So there are only 6 strips in total.
-            // accomplish the details for data chunk
 
-            // parityId 0: data strip
-            // parityId 1: P parity
-            // parityId 2: Q parity
+            // parityId 0: data strip, put into the first 6 disks
+            // parityId 1: P parity, put only put at the 7th disk
+            // parityId 2: Q parity, onlyt at the 8th disk
+            if (i == 0) {
+                dataChunk.setHead(true);
+            }
             if (parityId == 0) {
                 diskNum = loadBalencePointer % (diskAddrs.length - 2);
             } else if (parityId == 1) {
@@ -103,8 +105,6 @@ public class FileSaver {
                 diskNum = diskAddrs.length - 1;
             }
             diskAddr = diskAddrs[diskNum].getAbsolutePath();
-            dataChunk.setHead(true);
-
             loadBalencePointer++;
             dataChunk.setDiskAddr(diskAddr);
 
@@ -132,6 +132,8 @@ public class FileSaver {
         }
         return true;
     }
+
+
 
     public File[] getDisks() {
         File diskGroups = new File(Constants.DISK_GROUP_ADDR);
