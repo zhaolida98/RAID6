@@ -21,7 +21,7 @@ public class ParityGenerator {
 
     private long mask(long v) {
         v &= 0x8080808080808080L;
-        return (v << 1) - (v >> 7);
+        return (v << 1) - (v >>> 7);
     }
 
     public void generate() {

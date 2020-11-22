@@ -21,7 +21,7 @@ public class Utils {
     public static void reWriteChunk(String chunkId, byte[] newContent) {
         FileExtractor fileExtractor = new FileExtractor();
 
-        DataChunk dataChunk = fileExtractor.readChunkFileToDataChunk(chunkId);
+        DataChunk dataChunk = fileExtractor.readChunkFile(chunkId);
         dataChunk.setContent(newContent);
         String newChunkFileAddr = Paths.get(dataChunk.getDiskAddr(), dataChunk.getChunkId()).toString();
         File newChunkFile = new File(newChunkFileAddr);
