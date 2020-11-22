@@ -18,6 +18,8 @@ we will give a brief introduction of how you use these codes for testing RAID6 o
 Here we would like to introduce how we store and access abstract “data objects” with arbitrary size as multiple fix size chunks. The data chunk size is
 defined as 4MB in *[Constants.java](https://github.com/zhaolida98/RAID6/blob/main/src/main/java/Constants.java)* file, named *CHUNK_SIZE*. 
 
+***TODO HERE***
+
 ## Parity
 
 The logic of parity is written in *[ParityGenerator.java](https://github.com/zhaolida98/RAID6/blob/main/src/main/java/ParityGenerator.java)* and 
