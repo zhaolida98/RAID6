@@ -19,6 +19,9 @@ Here we would like to introduce how we store and access abstract “data objects
 defined as 4MB in *[Constants.java](https://github.com/zhaolida98/RAID6/blob/main/src/main/java/Constants.java)* file, named *CHUNK_SIZE*. 
 
 ***TODO HERE***
+***TODO HERE***
+***TODO HERE***
+***TODO HERE***
 
 ## Parity
 
